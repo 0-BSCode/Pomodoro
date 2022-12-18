@@ -14,6 +14,12 @@ const Home: NextPage = () => {
       refetch();
     },
   });
+  const { mutate: deleteTask } = trpc.task.deleteTask.useMutation({
+    onSuccess: () => {
+      refetch();
+    },
+  });
+
   const [name, setName] = useState<string>("");
   return (
     <>
@@ -76,7 +82,13 @@ const Home: NextPage = () => {
           <div>
             {tasks &&
               tasks.map((task) => (
-                <div key={task.id}>
+                <div
+                  key={task.id}
+                  className="hover:cursor-pointer"
+                  onClick={() => {
+                    deleteTask({ taskId: task.id });
+                  }}
+                >
                   <p>{task.name}</p>
                 </div>
               ))}
