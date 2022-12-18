@@ -71,5 +71,6 @@ model Task {
   accountId   String
   name        String
   description String?
+  isFinished  Boolean @default(false)
   account     Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 }

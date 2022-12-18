@@ -19,6 +19,11 @@ const Home: NextPage = () => {
       refetch();
     },
   });
+  const { mutate: updateTask } = trpc.task.editTask.useMutation({
+    onSuccess: () => {
+      refetch();
+    },
+  });
 
   const [name, setName] = useState<string>("");
   return (
@@ -86,10 +91,16 @@ const Home: NextPage = () => {
                   key={task.id}
                   className="hover:cursor-pointer"
                   onClick={() => {
-                    deleteTask({ taskId: task.id });
+                    updateTask({
+                      taskId: task.id,
+                      isFinished: !task.isFinished,
+                    });
+                    // deleteTask({ taskId: task.id });
                   }}
                 >
-                  <p>{task.name}</p>
+                  <p className={task.isFinished ? "line-through" : ""}>
+                    {task.name}
+                  </p>
                 </div>
               ))}
           </div>
@@ -103,6 +114,8 @@ export default Home;
 
 const AuthShowcase: React.FC = () => {
   const { data: sessionData } = useSession();
+
+  console.log(sessionData);
 
   const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery(
     undefined, // no input

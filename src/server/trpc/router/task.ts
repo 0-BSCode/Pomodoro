@@ -1,3 +1,4 @@
+import { Task } from "@prisma/client";
 import { z } from "zod";
 
 import { router, protectedProcedure } from "../trpc";
@@ -58,26 +59,14 @@ export const taskRouter = router({
       const task = await ctx.prisma.task.findFirst({
         where: {
           id: taskId,
+          account: {
+            userId: ctx.session.user.id,
+          },
         },
       });
 
       if (!task) {
         throw new Error("Task not found");
-      }
-
-      const userAccount = await ctx.prisma.account.findFirst({
-        where: {
-          // TODO: Fix bc a user can have multiple accounts
-          userId: ctx.session.user.id,
-        },
-      });
-
-      if (!userAccount) {
-        throw new Error("Could not retrieve account information");
-      }
-
-      if (userAccount.id !== task.accountId) {
-        throw new Error("Task not associated with current account");
       }
 
       await ctx.prisma.task.delete({
@@ -87,5 +76,53 @@ export const taskRouter = router({
       });
 
       return taskId;
+    }),
+  editTask: protectedProcedure
+    .input(
+      z.object({
+        taskId: z.string(),
+        name: z.string().nullish(),
+        description: z.string().nullish(),
+        isFinished: z.boolean().nullish(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { taskId, name, description, isFinished } = input;
+
+      const task = await ctx.prisma.task.findFirst({
+        where: {
+          id: taskId,
+          account: {
+            userId: ctx.session.user.id,
+          },
+        },
+      });
+
+      if (!task) {
+        throw new Error("Task not found");
+      }
+
+      const updateObject: Partial<Task> = {};
+
+      if (name?.length) {
+        updateObject.name = name;
+      }
+
+      if (description?.length) {
+        updateObject.description = description;
+      }
+
+      if (typeof isFinished === "boolean") {
+        updateObject.isFinished = isFinished;
+      }
+
+      const updatedTask = await ctx.prisma.task.update({
+        where: {
+          id: taskId,
+        },
+        data: updateObject,
+      });
+
+      return updatedTask;
     }),
 });
