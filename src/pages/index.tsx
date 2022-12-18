@@ -4,10 +4,17 @@ import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 import { trpc } from "../utils/trpc";
+import { useState } from "react";
 
 const Home: NextPage = () => {
   const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
-
+  const { data: tasks, refetch } = trpc.task.fetchTasks.useQuery();
+  const { mutate: addTask } = trpc.task.addTask.useMutation({
+    onSuccess: () => {
+      refetch();
+    },
+  });
+  const [name, setName] = useState<string>("");
   return (
     <>
       <Head>
@@ -51,6 +58,30 @@ const Home: NextPage = () => {
             <AuthShowcase />
           </div>
         </div>
+
+        <div className="text-white">
+          <form
+            onSubmit={() => {
+              addTask({ name });
+            }}
+          >
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <button type="submit">Create</button>
+          </form>
+
+          <div>
+            {tasks &&
+              tasks.map((task) => (
+                <div key={task.id}>
+                  <p>{task.name}</p>
+                </div>
+              ))}
+          </div>
+        </div>
       </main>
     </>
   );
@@ -63,7 +94,7 @@ const AuthShowcase: React.FC = () => {
 
   const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery(
     undefined, // no input
-    { enabled: sessionData?.user !== undefined },
+    { enabled: sessionData?.user !== undefined }
   );
 
   return (
