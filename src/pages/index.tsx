@@ -1,5 +1,5 @@
 import { type NextPage } from "next";
-import Header from "../components/_common/Header";
+import Header from "@/components/_common/Header";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 
