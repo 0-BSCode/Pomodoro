@@ -1,5 +1,4 @@
 import { type GetServerSidePropsContext } from "next";
-import Header from "@/components/_common/header";
 import Pomodoro from "public/images/bowling-ball.svg";
 import {
   getSession,
@@ -40,7 +39,6 @@ const Home = ({ providers }: Props) => {
   const [name, setName] = useState<string>("");
   return (
     <>
-      <Header />
       <main className="flex min-h-screen flex-col items-center justify-center">
         <section className="flex flex-col items-center">
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-cGray-200">
