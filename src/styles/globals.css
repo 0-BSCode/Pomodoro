@@ -8,4 +8,23 @@
     html {
         font-family: 'Patrick Hand', cursive
     }
+
+    button {
+        @apply rounded-md p-2 text-cGray-500 shadow-sm shadow-slate-500
+    }
+}
+
+@layer components {
+
+}
+
+@layer utilities {
+
+    .btn--outlined {
+        @apply bg-cGray-100 border-2 border-cGray-500 text-cGray-500
+    }
+
+    .btn--contained {
+        @apply text-cGray-100 bg-cGray-500
+    }
 }
