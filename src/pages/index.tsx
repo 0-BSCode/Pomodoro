@@ -45,8 +45,8 @@ const Home = ({ providers }: Props) => {
             <img className="w-10" src={Pomodoro.src} alt="Pomodoro" />
           </div>
           <div className="mt-7 flex flex-col items-center">
-            <h1 className="font-bold">Pomodoro</h1>
-            <p>A better way to focus.</p>
+            <h1 className="text-3xl font-bold">Pomodoro</h1>
+            <p className="text-md mt-1">A better way to focus.</p>
           </div>
         </section>
         <section className="mt-10 flex w-48 flex-col items-center">

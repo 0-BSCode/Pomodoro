@@ -10,7 +10,7 @@
     }
 
     button {
-        @apply rounded-md p-2 text-cGray-500 shadow-sm shadow-slate-500
+        @apply rounded-md py-2 px-5 text-cGray-500 shadow-sm shadow-slate-500 text-lg
     }
 }
 
