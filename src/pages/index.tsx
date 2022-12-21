@@ -1,29 +1,41 @@
-import { type NextPage } from "next";
-import Header from "@/components/_common/Header";
+import { type GetServerSidePropsContext } from "next";
+import Header from "@/components/_common/header";
 import Pomodoro from "public/images/bowling-ball.svg";
-import { signIn, signOut, useSession } from "next-auth/react";
+import {
+  getSession,
+  signIn,
+  signOut,
+  useSession,
+  getProviders,
+  getCsrfToken,
+} from "next-auth/react";
 
 import { trpc } from "../utils/trpc";
 import { useState } from "react";
+import { type Provider } from "next-auth/providers";
 
-const Home: NextPage = () => {
-  const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
-  const { data: tasks, refetch } = trpc.task.fetchTasks.useQuery();
-  const { mutate: addTask } = trpc.task.addTask.useMutation({
-    onSuccess: () => {
-      refetch();
-    },
-  });
-  const { mutate: deleteTask } = trpc.task.deleteTask.useMutation({
-    onSuccess: () => {
-      refetch();
-    },
-  });
-  const { mutate: updateTask } = trpc.task.editTask.useMutation({
-    onSuccess: () => {
-      refetch();
-    },
-  });
+interface Props {
+  providers: Provider[];
+}
+
+const Home = ({ providers }: Props) => {
+  // const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
+  // const { data: tasks, refetch } = trpc.task.fetchTasks.useQuery();
+  // const { mutate: addTask } = trpc.task.addTask.useMutation({
+  //   onSuccess: () => {
+  //     refetch();
+  //   },
+  // });
+  // const { mutate: deleteTask } = trpc.task.deleteTask.useMutation({
+  //   onSuccess: () => {
+  //     refetch();
+  //   },
+  // });
+  // const { mutate: updateTask } = trpc.task.editTask.useMutation({
+  //   onSuccess: () => {
+  //     refetch();
+  //   },
+  // });
 
   const [name, setName] = useState<string>("");
   return (
@@ -40,9 +52,16 @@ const Home: NextPage = () => {
           </div>
         </section>
         <section className="mt-10 flex w-48 flex-col items-center">
-          <button className="btn--contained w-full" onClick={() => signIn()}>
-            Sign In
-          </button>
+          {Object.values(providers).map((provider) => (
+            <div key={provider.name}>
+              <button
+                onClick={() => signIn(provider.id)}
+                className="btn--outlined w-full"
+              >
+                Continue with {provider.name}
+              </button>
+            </div>
+          ))}
         </section>
       </main>
     </>
@@ -50,6 +69,28 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const { req } = context;
+  const session = await getSession({ req });
+
+  if (session) {
+    return {
+      redirect: {
+        destination: "/dashboard",
+      },
+    };
+  }
+
+  return {
+    props: {
+      providers: await getProviders(),
+      csrfToken: await getCsrfToken(context),
+    },
+  };
+};
 
 const AuthShowcase: React.FC = () => {
   const { data: sessionData } = useSession();
