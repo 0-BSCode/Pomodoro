@@ -22,7 +22,7 @@ model Example {
 
 // Necessary for Next auth
 model Account {
-  id                String  @id @default(cuid())
+  id                String    @id @default(cuid())
   userId            String
   type              String
   provider          String
@@ -34,8 +34,9 @@ model Account {
   scope             String?
   id_token          String? // @db.Text
   session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   Task              Task[]
+  Settings          Settings?
 
   @@unique([provider, providerAccountId])
 }
@@ -73,4 +74,12 @@ model Task {
   description String?
   isFinished  Boolean @default(false)
   account     Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+}
+
+model Settings {
+  accountId        String  @unique
+  account          Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  pomodoroLength   Int
+  shortBreakLength Int
+  longBreakLength  Int
 }
