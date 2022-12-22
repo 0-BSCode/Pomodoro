@@ -1,4 +1,4 @@
-import { Settings } from "@prisma/client";
+import { type Settings } from "@prisma/client";
 import { z } from "zod";
 
 import { router, protectedProcedure } from "../trpc";
