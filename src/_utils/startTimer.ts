@@ -1,4 +1,5 @@
 import { type Dispatch, type SetStateAction } from "react";
+import formatTime from "./formatTime";
 
 const startTimer = (
   duration: number,
@@ -11,10 +12,8 @@ const startTimer = (
     minutes = Math.floor(timer / 60);
     seconds = timer % 60;
 
-    const minutesText = minutes < 10 ? "0" + minutes : minutes;
-    const secondsText = seconds < 10 ? "0" + seconds : seconds;
-
-    setDisplay(minutesText + ":" + secondsText);
+    const displayText = formatTime(0, minutes, seconds);
+    setDisplay(displayText);
 
     if (--timer < 0) {
       timer = duration;
