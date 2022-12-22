@@ -15,7 +15,7 @@ const layoutsPomodoro = (Page: FunctionComponent) =>
         if (status === "loading") return;
 
         if (!sessionData) {
-          router.push("/");
+          router.push("/sign-in");
         }
       };
 
