@@ -21,7 +21,7 @@ export const settingsRouter = router({
       });
 
       if (!account) {
-        throw new Error("No account associated with settings");
+        throw new Error("Unauthorized");
       }
 
       settings = await ctx.prisma.settings.create({
