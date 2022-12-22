@@ -25,7 +25,11 @@ const SignIn = ({ providers }: Props) => {
           {Object.values(providers).map((provider) => (
             <div key={provider.name}>
               <button
-                onClick={() => signIn(provider.id)}
+                onClick={() =>
+                  signIn(provider.id, {
+                    callbackUrl: "/",
+                  })
+                }
                 className="btn--outlined w-full"
               >
                 Continue with {provider.name}

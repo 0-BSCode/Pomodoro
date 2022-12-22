@@ -12,9 +12,7 @@ const layoutsPomodoro = (Page: FunctionComponent) =>
 
     useEffect(() => {
       const redirect = () => {
-        if (status === "loading") return;
-
-        if (!sessionData) {
+        if (status === "unauthenticated") {
           router.push("/sign-in");
         }
       };
