@@ -1,5 +1,6 @@
 import React from "react";
 import { signOut } from "next-auth/react";
+import layoutsPomodoro from "@layouts/authenticated";
 
 const Dashboard = () => {
   return (
@@ -10,4 +11,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default layoutsPomodoro(Dashboard);

@@ -5,7 +5,6 @@ import Header from "@components/_common/header";
 import { trpc } from "../utils/trpc";
 
 import "../styles/globals.css";
-import RouteGuard from "@/components/_common/routeGuard";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -13,12 +12,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <RouteGuard>
-        <>
-          <Header />
-          <Component {...pageProps} />
-        </>
-      </RouteGuard>
+      <>
+        <Header />
+        <Component {...pageProps} />
+      </>
     </SessionProvider>
   );
 };
