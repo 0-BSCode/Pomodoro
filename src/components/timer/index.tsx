@@ -17,6 +17,7 @@ const Timer = () => {
   const [times, setTimes] = useState<Timers>({} as Timers);
   const [tab, setTab] = useState<TimerKeys>(TimerKeys.POMODORO);
   const [display, setDisplay] = useState<string>(formatTime(0, 0, 0));
+  const [timer, setTimer] = useState<NodeJS.Timer | null>(null);
 
   useEffect(() => {
     if (settingsQuery.data) {
@@ -50,9 +51,20 @@ const Timer = () => {
       ))}
       {times && <h3>{display}</h3>}
       <button
-        onClick={() => startTimer(times ? times[tab] * 60 : 0, setDisplay)}
+        onClick={() => {
+          if (!timer) {
+            const interval = startTimer(
+              times ? times[tab] * 60 : 0,
+              setDisplay
+            );
+            setTimer(interval);
+          } else {
+            clearInterval(timer);
+            setTimer(null);
+          }
+        }}
       >
-        Start
+        {timer ? "Stop" : "Start"}
       </button>
     </section>
   );

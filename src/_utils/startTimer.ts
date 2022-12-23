@@ -4,11 +4,11 @@ import formatTime from "./formatTime";
 const startTimer = (
   duration: number,
   setDisplay: Dispatch<SetStateAction<string>>
-): void => {
+): NodeJS.Timer => {
   let timer = duration;
   let minutes, seconds;
 
-  setInterval(() => {
+  const timerInterval = setInterval(() => {
     minutes = Math.floor(timer / 60);
     seconds = timer % 60;
 
@@ -19,6 +19,8 @@ const startTimer = (
       timer = duration;
     }
   }, 1000);
+
+  return timerInterval;
 };
 
 export default startTimer;
