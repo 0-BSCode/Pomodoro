@@ -1,18 +1,20 @@
 import { type Dispatch, type SetStateAction } from "react";
-import formatTime from "./formatTime";
+import convertTimeToString from "./convertTimeToString";
 
 const startTimer = (
   duration: number,
   setDisplay: Dispatch<SetStateAction<string>>
 ): NodeJS.Timer => {
   let timer = duration;
-  let minutes, seconds;
+  let hours, minutes, seconds;
 
   const timerInterval = setInterval(() => {
-    minutes = Math.floor(timer / 60);
+    hours = Math.floor(timer / 3600);
+    minutes = Math.floor(timer / 60) - hours * 60;
     seconds = timer % 60;
 
-    const displayText = formatTime(0, minutes, seconds);
+    const remainingTime = hours * 3600 + minutes * 60 + seconds;
+    const displayText = convertTimeToString(remainingTime);
     setDisplay(displayText);
 
     if (--timer < 0) {

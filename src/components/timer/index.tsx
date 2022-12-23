@@ -1,6 +1,7 @@
 import { type Settings } from "@prisma/client";
 import { trpc } from "@utils/trpc";
-import formatTime from "@_utils/formatTime";
+import convertTimeToString from "@_utils/convertTimeToString";
+import convertStringToTime from "@_utils/convertStringToTime";
 import startTimer from "@_utils/startTimer";
 import React, { useEffect, useState } from "react";
 
@@ -16,21 +17,32 @@ const Timer = () => {
   const settingsQuery = trpc.settings.fetchSettings.useQuery();
   const [times, setTimes] = useState<Timers>({} as Timers);
   const [tab, setTab] = useState<TimerKeys>(TimerKeys.POMODORO);
-  const [display, setDisplay] = useState<string>(formatTime(0, 0, 0));
+  const [display, setDisplay] = useState<string>(convertTimeToString(0));
   const [timer, setTimer] = useState<NodeJS.Timer | null>(null);
 
+  // Initializing timer
   useEffect(() => {
     if (settingsQuery.data) {
       const { pomodoroLength, shortBreakLength, longBreakLength } =
         settingsQuery.data;
       setTimes({ pomodoroLength, shortBreakLength, longBreakLength });
-      setDisplay(formatTime(0, pomodoroLength, 0));
+      setDisplay(convertTimeToString(pomodoroLength * 60));
     }
   }, [settingsQuery.data]);
 
+  // Switching tabs
   useEffect(() => {
-    setDisplay(formatTime(0, times[tab], 0));
+    setDisplay(convertTimeToString(times[tab] * 60));
   }, [tab]);
+
+  // Ending timer
+  useEffect(() => {
+    if (timer && convertStringToTime(display) === 0) {
+      clearInterval(timer);
+      setTimer(null);
+      setDisplay(convertTimeToString(times[tab] * 60));
+    }
+  }, [timer, display]);
 
   return (
     <section>
@@ -54,7 +66,7 @@ const Timer = () => {
         onClick={() => {
           if (!timer) {
             const interval = startTimer(
-              times ? times[tab] * 60 : 0,
+              convertStringToTime(display),
               setDisplay
             );
             setTimer(interval);
