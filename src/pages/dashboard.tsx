@@ -6,7 +6,7 @@ import TasksList from "@components/tasks";
 
 const Dashboard = () => {
   return (
-    <div>
+    <div className="px-5">
       <Timer />
       <TasksList />
       <button onClick={() => signOut()}>Log Out</button>

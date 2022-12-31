@@ -27,13 +27,11 @@ const layoutsPomodoro = (Page: FunctionComponent) =>
     console.log(sessionData.user);
     return (
       <>
-        <nav className="flex items-center justify-between p-4">
-          <div className="flex items-center gap-1">
-            <img src={Pomodoro.src} alt="Pomodoro" />
-            <h1>Pomodoro</h1>
-          </div>
+        <nav className="shadow--soft flex items-center justify-between p-5">
+          <img src={Pomodoro.src} alt="Pomodoro" />
+          <h1>Focus</h1>
           <img
-            className="h-7 w-7 rounded-full border-2 border-cGray-300"
+            className="h-7 w-7 rounded-full"
             src={sessionData.user?.image || ProfilePicture.src}
             alt="Profile Picture"
             referrerPolicy="no-referrer"

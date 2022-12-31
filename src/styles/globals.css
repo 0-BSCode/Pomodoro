@@ -15,7 +15,9 @@
 }
 
 @layer components {
-
+    .chip {
+        @apply rounded-full text-sm capitalize shadow-none py-1
+    }
 }
 
 @layer utilities {
@@ -26,5 +28,9 @@
 
     .btn--contained {
         @apply text-cGray-100 bg-cGray-500
+    }
+
+    .shadow--soft {
+        @apply shadow-md shadow-cGray-300
     }
 }
