@@ -5,9 +5,7 @@ import convertStringToTime from "@_utils/convertStringToTime";
 import startTimer from "@_utils/startTimer";
 import React, { useEffect, useState } from "react";
 import parseTimerKey from "@_utils/parseTimerKey";
-import skipDisabledIcon from "public/images/skip-disabled.svg";
-import skipIcon from "public/images/skip.svg";
-import settingsIcon from "public/images/setting.svg";
+import icons from "@assets/images/icons";
 
 type Timers = Omit<Settings, "accountId">;
 
@@ -92,11 +90,14 @@ const Timer = () => {
         >
           {timer ? "Stop" : "Start"}
         </button>
-        <button className="p-0 shadow-none">
-          <img src={timer ? skipIcon.src : skipDisabledIcon.src} alt={"Skip"} />
+        <button className="p-0 shadow-none" disabled={!timer}>
+          <img
+            src={timer ? icons.skipIcon : icons.skipDisabledIcon}
+            alt={"Skip"}
+          />
         </button>
         <button className="p-0 shadow-none">
-          <img src={settingsIcon.src} alt={"Skip"} />
+          <img src={icons.settingsIcon} alt={"Skip"} />
         </button>
       </div>
     </section>
