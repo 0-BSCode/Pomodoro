@@ -47,7 +47,7 @@ const Timer = () => {
   }, [timer, display]);
 
   return (
-    <section className="mt-14 flex flex-col gap-6">
+    <section className="flex flex-col gap-6">
       <div className="flex justify-between">
         {Object.keys(TimerKeys).map((key) => (
           <button
