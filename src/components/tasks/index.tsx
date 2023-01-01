@@ -3,6 +3,7 @@ import { trpc } from "@utils/trpc";
 import React, { useState } from "react";
 import icons from "@assets/images/icons";
 import TaskCard from "./Card";
+import Link from "next/link";
 
 const TasksList = () => {
   const [name, setName] = useState<string>("");
@@ -43,10 +44,12 @@ const TasksList = () => {
           Add
         </button>
       </form> */}
-      <button className="btn--outlined flex items-center justify-center gap-3 shadow-none">
-        <p className="text-lg">Add Task</p>
-        <img src={icons.plusCircleIcon} alt={"Add Task"} />
-      </button>
+      <Link href="/tasks/create" passHref>
+        <button className="btn--outlined flex w-full items-center justify-center gap-3 shadow-none">
+          <p className="text-lg">Add Task</p>
+          <img src={icons.plusCircleIcon} alt={"Add Task"} />
+        </button>
+      </Link>
       <div className="flex flex-col gap-5">
         {tasks.map((task) => (
           <TaskCard key={task.id} task={task} />
