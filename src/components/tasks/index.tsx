@@ -21,14 +21,14 @@ const TasksList = () => {
   console.log("Tasks");
   console.log(tasks);
   return (
-    <section className="flex flex-col gap-2 px-7">
+    <section className="flex flex-col gap-4 px-3">
       <div className="flex justify-between">
         <h6 className="text-xl">Tasks</h6>
         <button className="bg-cGray-200 p-1 shadow-none">
           <img src={icons.menuIcon} alt={"Menu"} />
         </button>
       </div>
-      <form
+      {/* <form
         onSubmit={(e) => {
           e.preventDefault();
           createTask.mutate({ name });
@@ -42,12 +42,12 @@ const TasksList = () => {
         <button type={"submit"} disabled={!name.length}>
           Add
         </button>
-      </form>
+      </form> */}
       <button className="btn--outlined flex items-center justify-center gap-3 shadow-none">
         <p className="text-lg">Add Task</p>
         <img src={icons.plusCircleIcon} alt={"Add Task"} />
       </button>
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-5">
         {tasks.map((task) => (
           <TaskCard key={task.id} task={task} />
         ))}

@@ -8,7 +8,7 @@ interface Props {
 
 const Checkbox = ({ checked, label }: Props) => {
   return (
-    <label className="group relative block cursor-pointer select-none rounded-full pl-8">
+    <label className="group relative block cursor-pointer select-none rounded-full pl-9">
       {label}
       <input
         className={"absolute h-0 w-0 cursor-pointer opacity-0"}
