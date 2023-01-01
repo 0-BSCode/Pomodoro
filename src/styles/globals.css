@@ -30,6 +30,10 @@
         @apply text-cGray-100 bg-cGray-500
     }
 
+    .btn--skeleton {
+        @apply bg-transparent p-1 shadow-none
+    }
+
     .shadow--soft {
         @apply shadow-md shadow-cGray-300
     }

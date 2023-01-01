@@ -19,8 +19,6 @@ const TasksList = () => {
     },
   });
 
-  console.log("Tasks");
-  console.log(tasks);
   return (
     <section className="flex flex-col gap-4 px-3">
       <div className="flex justify-between">

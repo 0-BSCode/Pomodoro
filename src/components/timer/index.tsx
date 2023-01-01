@@ -17,7 +17,7 @@ enum TimerKeys {
 
 const Timer = () => {
   const settingsQuery = trpc.settings.fetchSettings.useQuery();
-  const [times, setTimes] = useState<Timers>({} as Timers);
+  const [times, setTimes] = useState<Timers | undefined>(undefined);
   const [tab, setTab] = useState<TimerKeys>(TimerKeys.POMODORO);
   const [display, setDisplay] = useState<string>(convertTimeToString(0));
   const [timer, setTimer] = useState<NodeJS.Timer | null>(null);
@@ -34,12 +34,14 @@ const Timer = () => {
 
   // Switching tabs
   useEffect(() => {
-    setDisplay(convertTimeToString(times[tab] * 60));
+    if (times) {
+      setDisplay(convertTimeToString(times[tab] * 60));
+    }
   }, [tab]);
 
   // Ending timer
   useEffect(() => {
-    if (timer && convertStringToTime(display) === 0) {
+    if (timer && convertStringToTime(display) === 0 && times) {
       clearInterval(timer);
       setTimer(null);
       setDisplay(convertTimeToString(times[tab] * 60));
