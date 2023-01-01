@@ -2,6 +2,7 @@ import { type Task } from "@prisma/client";
 import { trpc } from "@utils/trpc";
 import React, { useState } from "react";
 import icons from "@assets/images/icons";
+import TaskCard from "./Card";
 
 const TasksList = () => {
   const [name, setName] = useState<string>("");
@@ -42,13 +43,13 @@ const TasksList = () => {
           Add
         </button>
       </form>
-      <button className="btn--outlined flex items-center justify-center gap-3">
+      <button className="btn--outlined flex items-center justify-center gap-3 shadow-none">
         <p className="text-lg">Add Task</p>
         <img src={icons.plusCircleIcon} alt={"Add Task"} />
       </button>
-      <div>
+      <div className="flex flex-col">
         {tasks.map((task) => (
-          <div key={task.id}>{task.name}</div>
+          <TaskCard key={task.id} task={task} />
         ))}
       </div>
     </section>
