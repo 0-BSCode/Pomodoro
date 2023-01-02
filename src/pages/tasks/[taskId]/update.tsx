@@ -4,7 +4,7 @@ import icons from "@assets/images/icons";
 import Link from "next/link";
 import TaskUpdate from "@components/tasks/Update";
 
-const CreateTaskPage = () => {
+const UpdateTaskPage = () => {
   return (
     <>
       <nav className="shadow--soft flex items-center justify-between p-5">
@@ -19,4 +19,4 @@ const CreateTaskPage = () => {
   );
 };
 
-export default authenticated(CreateTaskPage);
+export default authenticated(UpdateTaskPage);

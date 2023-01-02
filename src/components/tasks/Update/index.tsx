@@ -1,12 +1,24 @@
-import useTasks from "@_hooks/useTasks";
+import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 const TaskUpdate = () => {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const { createTask } = useTasks();
   const router = useRouter();
+  const taskId: string = router.query.taskId as string;
+  const fetchTask = trpc.task.fetchTask.useQuery(
+    { id: taskId },
+    {
+      onSuccess: (data) => {
+        setName(data.name);
+        setDescription(data.description ?? "");
+      },
+    }
+  );
+
+  if (fetchTask.isLoading)
+    return <p className="mt-10 text-center">Loading...</p>;
 
   return (
     <section className="flex flex-col items-center gap-10 px-5 pt-10">
@@ -18,14 +30,14 @@ const TaskUpdate = () => {
         onSubmit={(e) => {
           e.preventDefault();
 
-          createTask.mutate(
-            { name, description },
-            {
-              onSuccess: () => {
-                router.push("/dashboard");
-              },
-            }
-          );
+          // createTask.mutate(
+          //   { name, description },
+          //   {
+          //     onSuccess: () => {
+          //       router.push("/dashboard");
+          //     },
+          //   }
+          // );
         }}
       >
         <input
@@ -43,7 +55,7 @@ const TaskUpdate = () => {
           className="btn--contained mt-5 w-full shadow-none"
           disabled={!name.length}
         >
-          Create
+          Update
         </button>
       </form>
     </section>

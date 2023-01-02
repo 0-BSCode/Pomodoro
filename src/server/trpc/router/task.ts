@@ -15,6 +15,27 @@ export const taskRouter = router({
 
     return tasks;
   }),
+  fetchTask: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const taskId = input.id;
+
+      const task = await ctx.prisma.task.findFirst({
+        where: {
+          id: taskId,
+        },
+      });
+
+      if (!task) {
+        throw new Error("Task not found");
+      }
+
+      return task;
+    }),
   addTask: protectedProcedure
     .input(
       z.object({
