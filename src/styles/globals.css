@@ -12,6 +12,10 @@
     button {
         @apply rounded-md py-2 px-5 text-cGray-500 shadow-sm shadow-slate-500 text-lg
     }
+
+    input, textarea {
+        @apply border-2 border-cGray-500 rounded-md p-2 w-full focus:outline-cGray-300
+    }
 }
 
 @layer components {

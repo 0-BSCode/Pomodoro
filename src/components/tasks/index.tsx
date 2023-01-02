@@ -1,23 +1,12 @@
-import { type Task } from "@prisma/client";
-import { trpc } from "@utils/trpc";
 import React, { useState } from "react";
 import icons from "@assets/images/icons";
 import TaskCard from "./Card";
 import Link from "next/link";
+import useTasks from "@components/_hooks/useTasks";
 
 const TasksList = () => {
   const [name, setName] = useState<string>("");
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const { data, refetch } = trpc.task.fetchTasks.useQuery(undefined, {
-    onSuccess: (data) => {
-      setTasks(data);
-    },
-  });
-  const createTask = trpc.task.addTask.useMutation({
-    onSuccess: () => {
-      refetch();
-    },
-  });
+  const { tasks } = useTasks();
 
   return (
     <section className="flex flex-col gap-4 px-3">

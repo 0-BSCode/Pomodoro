@@ -35,10 +35,14 @@ export const taskRouter = router({
         throw new Error("Can't find user account");
       }
 
+      if (!name.length) {
+        throw new Error("Task should have a name");
+      }
+
       const newTask = await ctx.prisma.task.create({
         data: {
           name,
-          description,
+          description: description && description.length ? description : null,
           accountId: userAccount.id,
         },
       });

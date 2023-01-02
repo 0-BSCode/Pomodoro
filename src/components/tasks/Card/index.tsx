@@ -22,7 +22,7 @@ const TaskCard = ({ task }: { task: Task }) => {
           (task.description ?? "text-center italic text-cGray-300")
         }
       >
-        {task.description || "No description given"}
+        {task.description ?? "No description given"}
       </p>
     </div>
   );

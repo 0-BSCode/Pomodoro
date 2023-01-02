@@ -2,6 +2,7 @@ import React from "react";
 import authenticated from "@layouts/authenticated";
 import icons from "@assets/images/icons";
 import Link from "next/link";
+import TaskCreate from "@components/tasks/Create";
 
 const CreateTaskPage = () => {
   return (
@@ -13,6 +14,7 @@ const CreateTaskPage = () => {
           <button className="btn--skeleton">Cancel</button>
         </Link>
       </nav>
+      <TaskCreate />
     </>
   );
 };
