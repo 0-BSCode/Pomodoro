@@ -17,7 +17,9 @@ const useTasks = () => {
     },
   });
 
-  return { tasks, fetchTasks, createTask };
+  const editTask = trpc.task.editTask.useMutation();
+
+  return { tasks, fetchTasks, createTask, editTask };
 };
 
 export default useTasks;

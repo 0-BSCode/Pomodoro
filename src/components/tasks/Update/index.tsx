@@ -1,4 +1,5 @@
 import { trpc } from "@utils/trpc";
+import useTasks from "@_hooks/useTasks";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
@@ -7,6 +8,7 @@ const TaskUpdate = () => {
   const [description, setDescription] = useState<string>("");
   const router = useRouter();
   const taskId: string = router.query.taskId as string;
+  const { editTask } = useTasks();
   const fetchTask = trpc.task.fetchTask.useQuery(
     { id: taskId },
     {
@@ -30,14 +32,14 @@ const TaskUpdate = () => {
         onSubmit={(e) => {
           e.preventDefault();
 
-          // createTask.mutate(
-          //   { name, description },
-          //   {
-          //     onSuccess: () => {
-          //       router.push("/dashboard");
-          //     },
-          //   }
-          // );
+          editTask.mutate(
+            { taskId, name, description },
+            {
+              onSuccess: () => {
+                router.push("/dashboard");
+              },
+            }
+          );
         }}
       >
         <input
@@ -51,12 +53,15 @@ const TaskUpdate = () => {
           onChange={(e) => setDescription(e.target.value)}
           placeholder={"Describe your task"}
         />
-        <button
-          className="btn--contained mt-5 w-full shadow-none"
-          disabled={!name.length}
-        >
-          Update
-        </button>
+        <div className="mt-5 flex w-full items-center justify-between gap-3">
+          <button className="btn--skeleton flex-grow">Delete</button>
+          <button
+            className="btn--contained flex-grow shadow-none"
+            disabled={!name.length}
+          >
+            Update
+          </button>
+        </div>
       </form>
     </section>
   );
