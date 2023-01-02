@@ -2,7 +2,7 @@ import React from "react";
 import icons from "@assets/images/icons";
 import TaskCard from "./Card";
 import Link from "next/link";
-import useTasks from "@components/_hooks/useTasks";
+import useTasks from "@_hooks/useTasks";
 
 const TasksList = () => {
   const { tasks } = useTasks();

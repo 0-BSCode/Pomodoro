@@ -2,7 +2,7 @@ import useTasks from "@_hooks/useTasks";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
-const TaskCreate = () => {
+const TaskUpdate = () => {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const { createTask } = useTasks();
@@ -50,4 +50,4 @@ const TaskCreate = () => {
   );
 };
 
-export default TaskCreate;
+export default TaskUpdate;
