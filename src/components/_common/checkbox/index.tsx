@@ -2,11 +2,11 @@ import React from "react";
 
 interface Props {
   checked: boolean;
-  // onChange: (value: boolean) => void;
+  onChange: (value: boolean) => void;
   label: string;
 }
 
-const Checkbox = ({ checked, label }: Props) => {
+const Checkbox = ({ checked, label, onChange }: Props) => {
   return (
     <label className="group relative block cursor-pointer select-none rounded-full pl-9">
       {label}
@@ -14,6 +14,7 @@ const Checkbox = ({ checked, label }: Props) => {
         className={"absolute h-0 w-0 cursor-pointer opacity-0"}
         type={"checkbox"}
         checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
       />
       <span
         className={
