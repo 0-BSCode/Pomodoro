@@ -17,8 +17,6 @@ const useTasks = () => {
     },
   });
 
-  console.log("TASKS FROM HOOK");
-  console.log(tasks);
   return { tasks, fetchTasks, createTask };
 };
 

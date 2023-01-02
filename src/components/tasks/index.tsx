@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import icons from "@assets/images/icons";
 import TaskCard from "./Card";
 import Link from "next/link";
 import useTasks from "@components/_hooks/useTasks";
 
 const TasksList = () => {
-  const [name, setName] = useState<string>("");
   const { tasks } = useTasks();
 
   return (
@@ -16,21 +15,6 @@ const TasksList = () => {
           <img src={icons.menuIcon} alt={"Menu"} />
         </button>
       </div>
-      {/* <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          createTask.mutate({ name });
-        }}
-      >
-        <input
-          type={"text"}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <button type={"submit"} disabled={!name.length}>
-          Add
-        </button>
-      </form> */}
       <Link href="/tasks/create" passHref>
         <button className="btn--outlined flex w-full items-center justify-center gap-3 shadow-none">
           <p className="text-lg">Add Task</p>

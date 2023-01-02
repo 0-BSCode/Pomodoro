@@ -8,7 +8,7 @@ const TaskCard = ({ task }: { task: Task }) => {
     <div className="shadow--soft flex flex-col gap-5 bg-cGray-200 p-4">
       <div className="flex justify-between">
         <Checkbox checked={task.isFinished} label={task.name} />
-        <button className="bg-transparent p-0 shadow-none">
+        <button className="bg-transparent px-0 py-1 shadow-none hover:bg-cGray-300">
           <img
             src={icons.menuIcon}
             alt={"Task actions"}
