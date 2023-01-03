@@ -6,6 +6,7 @@ import plusCircleIcon from "public/images/plus-circle.svg";
 import pomodoroIcon from "public/images/bowling-ball.svg";
 import personIcon from "public/images/user-circle.svg";
 import penIcon from "public/images/pen.svg";
+import timesIcon from "public/images/times.svg";
 
 const icons = {
   settingsIcon: settingsIcon.src,
@@ -16,6 +17,7 @@ const icons = {
   pomodoroIcon: pomodoroIcon.src,
   personIcon: personIcon.src,
   penIcon: penIcon.src,
+  timesIcon: timesIcon.src,
 };
 
 export default icons;

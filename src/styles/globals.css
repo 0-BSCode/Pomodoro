@@ -28,7 +28,7 @@
     }
 
     .modal {
-        @apply absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 z-50
+        @apply absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 z-50 bg-cGray-100 rounded-md w-80 flex flex-col p-5
     }
 
     .breaker {

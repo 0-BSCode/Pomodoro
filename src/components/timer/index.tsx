@@ -1,4 +1,3 @@
-import { type Settings } from "@prisma/client";
 import { trpc } from "@utils/trpc";
 import convertTimeToString from "@_utils/convertTimeToString";
 import convertStringToTime from "@_utils/convertStringToTime";
@@ -7,14 +6,8 @@ import React, { useEffect, useState } from "react";
 import parseTimerKey from "@_utils/parseTimerKey";
 import icons from "@assets/images/icons";
 import SettingsModal from "@components/settings/Modal";
-
-type Timers = Omit<Settings, "accountId">;
-
-enum TimerKeys {
-  POMODORO = "pomodoroLength",
-  SHORT_BREAK = "shortBreakLength",
-  LONG_BREAK = "longBreakLength",
-}
+import { type Timers } from "types/timers";
+import { TimerKeys } from "types/enums/timerKeys";
 
 const Timer = () => {
   const settingsQuery = trpc.settings.fetchSettings.useQuery();
@@ -52,7 +45,14 @@ const Timer = () => {
 
   return (
     <>
-      {openSettings && <SettingsModal onClose={() => setOpenSettings(false)} />}
+      {openSettings && (
+        <SettingsModal
+          onClose={() => {
+            setOpenSettings(false);
+            settingsQuery.refetch();
+          }}
+        />
+      )}
       <section className="flex flex-col gap-6">
         <div className="flex justify-between">
           {Object.keys(TimerKeys).map((key) => (
