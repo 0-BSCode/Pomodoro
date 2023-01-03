@@ -24,11 +24,11 @@
     }
 
     .overlay {
-        @apply absolute top-0 left-0 w-full h-full bg-cGray-300 opacity-40
+        @apply absolute top-0 left-0 w-full h-full bg-cGray-300 opacity-50 z-50
     }
 
     .modal {
-        @apply absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4
+        @apply absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 z-50
     }
 
     .breaker {
