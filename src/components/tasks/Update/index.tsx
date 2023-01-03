@@ -8,7 +8,7 @@ const TaskUpdate = () => {
   const [description, setDescription] = useState<string>("");
   const router = useRouter();
   const taskId: string = router.query.taskId as string;
-  const { editTask } = useTasks();
+  const { editTask, deleteTask } = useTasks();
   const fetchTask = trpc.task.fetchTask.useQuery(
     { id: taskId },
     {
@@ -54,7 +54,23 @@ const TaskUpdate = () => {
           placeholder={"Describe your task"}
         />
         <div className="mt-5 flex w-full items-center justify-between gap-3">
-          <button className="btn--skeleton flex-grow">Delete</button>
+          <button
+            className="btn--skeleton flex-grow"
+            onClick={(e) => {
+              e.preventDefault();
+
+              deleteTask.mutate(
+                { taskId },
+                {
+                  onSuccess: () => {
+                    router.push("/dashboard");
+                  },
+                }
+              );
+            }}
+          >
+            Delete
+          </button>
           <button
             className="btn--contained flex-grow shadow-none"
             disabled={!name.length}

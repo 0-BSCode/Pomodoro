@@ -17,9 +17,11 @@ const useTasks = () => {
     },
   });
 
+  const deleteTask = trpc.task.deleteTask.useMutation();
+
   const editTask = trpc.task.editTask.useMutation();
 
-  return { tasks, fetchTasks, createTask, editTask };
+  return { tasks, fetchTasks, createTask, editTask, deleteTask };
 };
 
 export default useTasks;

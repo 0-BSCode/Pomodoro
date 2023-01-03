@@ -30,11 +30,7 @@ const TaskCard = ({ task }: { task: Task }) => {
         />
         <Link href={`/tasks/${task.id}/update`} passHref>
           <button className="bg-transparent px-0 py-1 shadow-none hover:bg-cGray-300">
-            <img
-              src={icons.menuIcon}
-              alt={"Task actions"}
-              className="rotate-90"
-            />
+            <img src={icons.penIcon} alt={"Task actions"} />
           </button>
         </Link>
       </div>
