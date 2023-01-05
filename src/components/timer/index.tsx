@@ -78,7 +78,7 @@ const Timer = () => {
             className={
               "rounded-lg py-1 px-5" +
               (timer
-                ? " btn--outlined"
+                ? " btn--outlined shadow-none"
                 : " btn--contained border-2 border-cGray-500")
             }
             onClick={() => {
