@@ -30,6 +30,9 @@ const SettingsModal = ({ onClose }: Props) => {
     }
   }, [settingsQuery.data]);
 
+  const submitDisabled =
+    timers && Object.values(timers).some((timer) => timer === 0);
+
   return (
     <Modal
       content={
@@ -70,15 +73,20 @@ const SettingsModal = ({ onClose }: Props) => {
           <div className="breaker" />
           <div className="flex w-full justify-end">
             <button
-              className="btn--contained shadow-none"
+              className={
+                "btn--contained shadow-none " +
+                (submitDisabled ? "bg-cGray-300" : "")
+              }
               onClick={() => {
+                if (!timers) return;
+
                 updateSettings.mutate({
-                  pomodoroLength: timers?.pomodoroLength,
-                  shortBreakLength: timers?.shortBreakLength,
-                  longBreakLength: timers?.longBreakLength,
+                  pomodoroLength: timers.pomodoroLength,
+                  shortBreakLength: timers.shortBreakLength,
+                  longBreakLength: timers.longBreakLength,
                 });
               }}
-              disabled={!timers}
+              disabled={submitDisabled}
             >
               Save
             </button>
