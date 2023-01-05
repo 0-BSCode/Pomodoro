@@ -77,9 +77,12 @@ model Task {
 }
 
 model Settings {
-  accountId        String  @unique
-  account          Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  pomodoroLength   Int
-  shortBreakLength Int
-  longBreakLength  Int
+  accountId         String  @unique
+  account           Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  pomodoroLength    Int     @default(30)
+  shortBreakLength  Int     @default(5)
+  longBreakLength   Int     @default(25)
+  longBreakInterval Int     @default(4)
+  volume            Int     @default(50)
+  alarmSound        String  @default("BELL")
 }

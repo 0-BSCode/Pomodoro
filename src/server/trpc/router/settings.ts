@@ -27,9 +27,6 @@ export const settingsRouter = router({
       settings = await ctx.prisma.settings.create({
         data: {
           accountId: account.id,
-          pomodoroLength: 30,
-          shortBreakLength: 5,
-          longBreakLength: 25,
         },
       });
     }

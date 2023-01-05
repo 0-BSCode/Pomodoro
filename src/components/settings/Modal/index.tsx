@@ -54,6 +54,7 @@ const SettingsModal = ({ onClose }: Props) => {
                   <p className="text-md capitalize">
                     {parseTimerKey(TKeys[idx] ?? "")}
                   </p>
+                  {/* TODO: Make this a number input */}
                   <input
                     type={"text"}
                     value={timers[key as keyof typeof timers]}
