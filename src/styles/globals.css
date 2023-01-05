@@ -13,7 +13,7 @@
         @apply rounded-md py-2 px-5 text-cGray-500 shadow-sm shadow-slate-500 text-lg
     }
 
-    input, textarea {
+    input, textarea, select {
         @apply border-2 border-cGray-500 rounded-md p-2 w-full focus:outline-cGray-300
     }
 }
@@ -48,6 +48,10 @@
 
     .btn--skeleton {
         @apply bg-transparent p-1 shadow-none
+    }
+
+    .inpt--text-center {
+        @apply text-center
     }
 
     .shadow--soft {

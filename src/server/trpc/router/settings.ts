@@ -39,10 +39,20 @@ export const settingsRouter = router({
         pomodoroLength: z.number().nullish(),
         shortBreakLength: z.number().nullish(),
         longBreakLength: z.number().nullish(),
+        longBreakInterval: z.number().nullish(),
+        alarmSound: z.string().nullish(),
+        volume: z.number().nullish(),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const { pomodoroLength, shortBreakLength, longBreakLength } = input;
+      const {
+        pomodoroLength,
+        shortBreakLength,
+        longBreakLength,
+        longBreakInterval,
+        alarmSound,
+        volume,
+      } = input;
 
       const settings = await ctx.prisma.settings.findFirst({
         where: {
@@ -69,6 +79,18 @@ export const settingsRouter = router({
 
       if (longBreakLength && longBreakLength > 0) {
         updateObject.longBreakLength = longBreakLength;
+      }
+
+      if (longBreakInterval && longBreakInterval > 0) {
+        updateObject.longBreakInterval = longBreakInterval;
+      }
+
+      if (typeof alarmSound === "string") {
+        updateObject.alarmSound = alarmSound;
+      }
+
+      if (volume && volume >= 0 && volume <= 100) {
+        updateObject.volume = volume;
       }
 
       const updatedSettings = await ctx.prisma.settings.update({

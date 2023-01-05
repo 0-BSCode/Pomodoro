@@ -5,6 +5,7 @@ import { type Timers } from "types/timers";
 import { TimerKeys } from "types/enums/timerKeys";
 import { trpc } from "@utils/trpc";
 import parseTimerKey from "@_utils/parseTimerKey";
+import { AlarmSounds } from "types/enums/alarmSounds";
 
 const TKeys = Object.keys(TimerKeys);
 
@@ -15,6 +16,9 @@ interface Props {
 const SettingsModal = ({ onClose }: Props) => {
   const settingsQuery = trpc.settings.fetchSettings.useQuery();
   const [timers, setTimers] = useState<Timers | undefined>(undefined);
+  const [longBreakInterval, setLongBreakInterval] = useState<number>(0);
+  const [alarmSound, setAlarmSound] = useState<string>("BELL");
+  const [volume, setVolume] = useState<number>(0);
   const updateSettings = trpc.settings.updateSettings.useMutation({
     onSuccess: () => {
       onClose();
@@ -27,6 +31,9 @@ const SettingsModal = ({ onClose }: Props) => {
       const { pomodoroLength, shortBreakLength, longBreakLength } =
         settingsQuery.data;
       setTimers({ pomodoroLength, shortBreakLength, longBreakLength });
+      setLongBreakInterval(settingsQuery.data.longBreakInterval);
+      setAlarmSound(settingsQuery.data.alarmSound);
+      setVolume(settingsQuery.data.volume);
     }
   }, [settingsQuery.data]);
 
@@ -36,7 +43,7 @@ const SettingsModal = ({ onClose }: Props) => {
   return (
     <Modal
       content={
-        <section className="modal gap-3">
+        <section className="modal gap-4">
           <div className="flex items-center justify-between">
             <p className="text-xl">Settings</p>
             <button onClick={onClose} className="btn--skeleton">
@@ -56,6 +63,7 @@ const SettingsModal = ({ onClose }: Props) => {
                   </p>
                   {/* TODO: Make this a number input */}
                   <input
+                    className="inpt--text-center"
                     type={"text"}
                     value={timers[key as keyof typeof timers]}
                     onChange={(e) =>
@@ -72,6 +80,50 @@ const SettingsModal = ({ onClose }: Props) => {
               ))}
           </div>
           <div className="breaker" />
+          <div className="flex items-center justify-between">
+            <p className="text-md w-full">Long Break Interval</p>
+            <input
+              className="inpt--text-center w-1/4"
+              type={"text"}
+              value={longBreakInterval}
+              onChange={(e) =>
+                setLongBreakInterval(
+                  parseInt(e.target.value.replace(/\D/, "") || "0")
+                )
+              }
+            />
+          </div>
+          <div className="breaker" />
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <p className="text-md w-full">Alarm Sound</p>
+              <select
+                name="alarms"
+                id="alarmSounds"
+                className="w-2/5 capitalize"
+                onChange={(e) => setAlarmSound(e.target.value)}
+                value={alarmSound}
+              >
+                {Object.keys(AlarmSounds).map((sound, idx) => (
+                  <option key={`sound__${idx}`} value={sound}>
+                    {sound.toLowerCase()}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-center justify-between">
+              <p className="text-md w-full">Volume</p>
+              <input
+                className="inpt--text-center w-1/4"
+                type={"text"}
+                value={volume}
+                onChange={(e) =>
+                  setVolume(parseInt(e.target.value.replace(/\D/, "") || "0"))
+                }
+              />
+            </div>
+          </div>
+          <div className="breaker" />
           <div className="flex w-full justify-end">
             <button
               className={
@@ -81,10 +133,15 @@ const SettingsModal = ({ onClose }: Props) => {
               onClick={() => {
                 if (!timers) return;
 
+                console.log("SUBMITTING");
+                console.log(alarmSound);
                 updateSettings.mutate({
                   pomodoroLength: timers.pomodoroLength,
                   shortBreakLength: timers.shortBreakLength,
                   longBreakLength: timers.longBreakLength,
+                  longBreakInterval,
+                  alarmSound,
+                  volume,
                 });
               }}
               disabled={submitDisabled}
