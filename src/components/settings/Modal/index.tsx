@@ -14,10 +14,11 @@ interface Props {
 }
 
 const SettingsModal = ({ onClose }: Props) => {
-  const settingsQuery = trpc.settings.fetchSettings.useQuery();
   const [timers, setTimers] = useState<Timers | undefined>(undefined);
   const [longBreakInterval, setLongBreakInterval] = useState<number>(0);
-  const [alarmSound, setAlarmSound] = useState<string>("BELL");
+  const [alarmSound, setAlarmSound] = useState<string | undefined>(undefined);
+  const [alarmSoundInitChange, setAlarmSoundInitChange] =
+    useState<boolean>(false);
   const [volume, setVolume] = useState<number>(0);
   const updateSettings = trpc.settings.updateSettings.useMutation({
     onSuccess: () => {
@@ -25,17 +26,24 @@ const SettingsModal = ({ onClose }: Props) => {
     },
   });
 
-  //   TODO: Extract settings fetching to context
-  useEffect(() => {
-    if (settingsQuery.data) {
-      const { pomodoroLength, shortBreakLength, longBreakLength } =
-        settingsQuery.data;
+  trpc.settings.fetchSettings.useQuery(undefined, {
+    onSuccess: (data) => {
+      const { pomodoroLength, shortBreakLength, longBreakLength } = data;
       setTimers({ pomodoroLength, shortBreakLength, longBreakLength });
-      setLongBreakInterval(settingsQuery.data.longBreakInterval);
-      setAlarmSound(settingsQuery.data.alarmSound);
-      setVolume(settingsQuery.data.volume);
-    }
-  }, [settingsQuery.data]);
+      setLongBreakInterval(data.longBreakInterval);
+      setAlarmSound(data.alarmSound);
+      setVolume(data.volume);
+    },
+  });
+
+  useEffect(() => {
+    if (!alarmSoundInitChange) return;
+    const audioElem = document.getElementById(
+      "audio-player"
+    ) as HTMLAudioElement;
+    audioElem.volume = volume / 100;
+    audioElem.play();
+  }, [alarmSound, volume]);
 
   const submitDisabled =
     timers && Object.values(timers).some((timer) => timer === 0);
@@ -44,6 +52,10 @@ const SettingsModal = ({ onClose }: Props) => {
     <Modal
       content={
         <section className="modal gap-4">
+          <audio
+            id="audio-player"
+            src={AlarmSounds[alarmSound as keyof typeof AlarmSounds] as string}
+          />
           <div className="flex items-center justify-between">
             <p className="text-xl">Settings</p>
             <button onClick={onClose} className="btn--skeleton">
@@ -101,7 +113,10 @@ const SettingsModal = ({ onClose }: Props) => {
                 name="alarms"
                 id="alarmSounds"
                 className="w-2/5 capitalize"
-                onChange={(e) => setAlarmSound(e.target.value)}
+                onChange={(e) => {
+                  setAlarmSound(e.target.value);
+                  setAlarmSoundInitChange(true);
+                }}
                 value={alarmSound}
               >
                 {Object.keys(AlarmSounds).map((sound, idx) => (
@@ -117,9 +132,14 @@ const SettingsModal = ({ onClose }: Props) => {
                 className="inpt--text-center w-1/4"
                 type={"text"}
                 value={volume}
-                onChange={(e) =>
-                  setVolume(parseInt(e.target.value.replace(/\D/, "") || "0"))
-                }
+                onChange={(e) => {
+                  const newVolume = parseInt(
+                    e.target.value.replace(/\D/, "") || "0"
+                  );
+                  if (newVolume <= 0 || newVolume >= 100) return;
+                  setVolume(newVolume);
+                  setAlarmSoundInitChange(true);
+                }}
               />
             </div>
           </div>
@@ -133,8 +153,6 @@ const SettingsModal = ({ onClose }: Props) => {
               onClick={() => {
                 if (!timers) return;
 
-                console.log("SUBMITTING");
-                console.log(alarmSound);
                 updateSettings.mutate({
                   pomodoroLength: timers.pomodoroLength,
                   shortBreakLength: timers.shortBreakLength,

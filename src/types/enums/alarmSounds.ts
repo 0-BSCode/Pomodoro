@@ -1,8 +1,5 @@
-import alarms from "@assets/sounds/alarms";
-
-// TODO: Map alarms directly
 export enum AlarmSounds {
-  "BELL" = "bellAlarm",
-  "WOOD" = "woodAlarm",
-  "DIGITAL" = "digitalAlarm",
+  "BELL" = "/sounds/bell-alarm.mp3",
+  "WOOD" = "/sounds/wood-alarm.mp3",
+  "DIGITAL" = "/sounds/digital-alarm.mp3",
 }
