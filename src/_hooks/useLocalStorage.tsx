@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 const useLocalStorage = () => {
   const [storage, setStorage] = useState<Storage | undefined>(undefined);
   const setItem = <T,>(key: string, data: T): void => {
-    storage?.setItem(key, JSON.stringify(data));
+    if (typeof data === "string") {
+      storage?.setItem(key, data);
+    } else {
+      storage?.setItem(key, JSON.stringify(data));
+    }
   };
 
   const getItem = (key: string): string | null | undefined => {

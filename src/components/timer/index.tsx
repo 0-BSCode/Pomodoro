@@ -29,6 +29,10 @@ const Timer = () => {
       setTimes({ pomodoroLength, shortBreakLength, longBreakLength });
       setDisplay(convertTimeToString(pomodoroLength * 60));
     }
+
+    const currentTab =
+      (getItem("currentTab") as TimerKeys) ?? TimerKeys.POMODORO;
+    setTab(currentTab);
   }, [settingsQuery.data]);
 
   // Switching tabs
@@ -36,6 +40,8 @@ const Timer = () => {
     if (times) {
       setDisplay(convertTimeToString(times[tab] * 60));
     }
+    // TODO: Pass enum as param
+    setItem<string>("currentTab", tab);
   }, [tab]);
 
   // Ending timer
@@ -52,31 +58,32 @@ const Timer = () => {
       audioElem.volume = (settingsQuery.data?.volume ?? 50) / 100;
       audioElem.play();
 
+      let newTab = TimerKeys.POMODORO;
       // Switch tabs
       switch (tab) {
-        case TimerKeys.LONG_BREAK:
-        case TimerKeys.SHORT_BREAK:
-          setTab(TimerKeys.POMODORO);
-          return;
         case TimerKeys.POMODORO: {
           const longBreakInterval = settingsQuery.data?.longBreakInterval ?? 4;
           const sessionNumber =
             (parseInt(getItem("sessionNumber") ?? "0") + 1) % longBreakInterval;
 
           if (sessionNumber) {
-            setTab(TimerKeys.SHORT_BREAK);
+            newTab = TimerKeys.SHORT_BREAK;
           } else {
-            setTab(TimerKeys.LONG_BREAK);
+            newTab = TimerKeys.LONG_BREAK;
           }
 
           setItem<number>("sessionNumber", sessionNumber);
           return;
         }
       }
+
+      setTab(newTab);
+      // TODO: Pass enum as param
+      setItem<string>("currentTab", newTab);
     }
   }, [timer, display]);
 
-  // Confirm before reload
+  // Confirm before reload while timer is running
   useEffect(() => {
     if (window && timer) {
       window.onbeforeunload = () => {
@@ -87,7 +94,7 @@ const Timer = () => {
     }
   }, [timer, window]);
 
-  console.log(getItem("sessionNumber"));
+  console.log(getItem("currentTab"));
 
   return (
     <>
