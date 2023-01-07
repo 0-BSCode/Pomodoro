@@ -8,6 +8,7 @@ import icons from "@assets/images/icons";
 import SettingsModal from "@components/settings/Modal";
 import { type Timers } from "types/timers";
 import { TimerKeys } from "types/enums/timerKeys";
+import { AlarmSounds } from "types/enums/alarmSounds";
 
 const Timer = () => {
   const settingsQuery = trpc.settings.fetchSettings.useQuery();
@@ -40,6 +41,12 @@ const Timer = () => {
       clearInterval(timer);
       setTimer(null);
       setDisplay(convertTimeToString(times[tab] * 60));
+
+      const audioElem = document.getElementById(
+        "audio-player-timer"
+      ) as HTMLAudioElement;
+      audioElem.volume = (settingsQuery.data?.volume ?? 50) / 100;
+      audioElem.play();
     }
   }, [timer, display]);
 
@@ -53,6 +60,15 @@ const Timer = () => {
           }}
         />
       )}
+      <audio
+        id="audio-player-timer"
+        src={
+          AlarmSounds[
+            settingsQuery.data?.alarmSound as keyof typeof AlarmSounds
+          ] as string
+        }
+      />
+      <audio id="audio-player-btn" src="/sounds/mouse-click.mp3" />
       <section className="flex flex-col gap-6">
         <div className="flex justify-between">
           {Object.keys(TimerKeys).map((key) => (
@@ -82,6 +98,11 @@ const Timer = () => {
                 : " btn--contained border-2 border-cGray-500")
             }
             onClick={() => {
+              const audioElem = document.getElementById(
+                "audio-player-btn"
+              ) as HTMLAudioElement;
+              audioElem.volume = 1;
+              audioElem.play();
               if (!timer) {
                 const interval = startTimer(
                   convertStringToTime(display),

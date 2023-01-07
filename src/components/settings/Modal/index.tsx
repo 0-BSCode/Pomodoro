@@ -39,7 +39,7 @@ const SettingsModal = ({ onClose }: Props) => {
   useEffect(() => {
     if (!alarmSoundInitChange) return;
     const audioElem = document.getElementById(
-      "audio-player"
+      "audio-player-settings"
     ) as HTMLAudioElement;
     audioElem.volume = volume / 100;
     audioElem.play();
@@ -53,7 +53,7 @@ const SettingsModal = ({ onClose }: Props) => {
       content={
         <section className="modal gap-4">
           <audio
-            id="audio-player"
+            id="audio-player-settings"
             src={AlarmSounds[alarmSound as keyof typeof AlarmSounds] as string}
           />
           <div className="flex items-center justify-between">
