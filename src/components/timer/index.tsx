@@ -94,8 +94,6 @@ const Timer = () => {
     }
   }, [timer, window]);
 
-  console.log(getItem("currentTab"));
-
   return (
     <>
       {openSettings && (
