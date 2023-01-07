@@ -12,7 +12,7 @@ const TaskCard = ({ task }: { task: Task }) => {
   const { editTask } = useTasks();
 
   return (
-    <div className="shadow--soft flex flex-col gap-5 bg-cGray-200 p-4">
+    <div className="shadow--soft flex cursor-pointer flex-col gap-5 rounded-md bg-cGray-200 p-4 hover:border-l-4 hover:border-cGray-300 hover:shadow-none">
       <div className="flex justify-between">
         <Checkbox
           checked={isTaskFinished}

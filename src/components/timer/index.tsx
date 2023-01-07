@@ -9,14 +9,17 @@ import SettingsModal from "@components/settings/Modal";
 import { type Timers } from "types/timers";
 import { TimerKeys } from "types/enums/timerKeys";
 import { AlarmSounds } from "types/enums/alarmSounds";
+import useLocalStorage from "@_hooks/useLocalStorage";
 
 const Timer = () => {
-  const settingsQuery = trpc.settings.fetchSettings.useQuery();
   const [times, setTimes] = useState<Timers | undefined>(undefined);
   const [tab, setTab] = useState<TimerKeys>(TimerKeys.POMODORO);
   const [display, setDisplay] = useState<string>(convertTimeToString(0));
   const [timer, setTimer] = useState<NodeJS.Timer | null>(null);
   const [openSettings, setOpenSettings] = useState<boolean>(false);
+
+  const { getItem, setItem } = useLocalStorage();
+  const settingsQuery = trpc.settings.fetchSettings.useQuery();
 
   // Initializing timer
   useEffect(() => {
@@ -42,13 +45,49 @@ const Timer = () => {
       setTimer(null);
       setDisplay(convertTimeToString(times[tab] * 60));
 
+      // Play alarm sound
       const audioElem = document.getElementById(
         "audio-player-timer"
       ) as HTMLAudioElement;
       audioElem.volume = (settingsQuery.data?.volume ?? 50) / 100;
       audioElem.play();
+
+      // Switch tabs
+      switch (tab) {
+        case TimerKeys.LONG_BREAK:
+        case TimerKeys.SHORT_BREAK:
+          setTab(TimerKeys.POMODORO);
+          return;
+        case TimerKeys.POMODORO: {
+          const longBreakInterval = settingsQuery.data?.longBreakInterval ?? 4;
+          const sessionNumber =
+            (parseInt(getItem("sessionNumber") ?? "0") + 1) % longBreakInterval;
+
+          if (sessionNumber) {
+            setTab(TimerKeys.SHORT_BREAK);
+          } else {
+            setTab(TimerKeys.LONG_BREAK);
+          }
+
+          setItem<number>("sessionNumber", sessionNumber);
+          return;
+        }
+      }
     }
   }, [timer, display]);
+
+  // Confirm before reload
+  useEffect(() => {
+    if (window && timer) {
+      window.onbeforeunload = () => {
+        return "";
+      };
+    } else {
+      window.onbeforeunload = null;
+    }
+  }, [timer, window]);
+
+  console.log(getItem("sessionNumber"));
 
   return (
     <>
@@ -117,7 +156,21 @@ const Timer = () => {
           >
             {timer ? "Stop" : "Start"}
           </button>
-          <button className="p-0 shadow-none" disabled={!timer}>
+          <button
+            className="p-0 shadow-none"
+            disabled={!timer}
+            onClick={(e) => {
+              e.preventDefault();
+
+              if (
+                confirm(
+                  "Timer will be reset. Are you sure you want to do this?"
+                )
+              ) {
+                setDisplay(convertTimeToString(0));
+              }
+            }}
+          >
             <img
               src={timer ? icons.skipIcon : icons.skipDisabledIcon}
               alt={"Skip"}
