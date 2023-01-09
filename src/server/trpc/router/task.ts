@@ -11,6 +11,11 @@ export const taskRouter = router({
           userId: ctx.session.user.id,
         },
       },
+      orderBy: [
+        {
+          order: "asc",
+        },
+      ],
     });
 
     return tasks;
@@ -102,17 +107,18 @@ export const taskRouter = router({
 
       return taskId;
     }),
-  editTask: protectedProcedure
+  updateTask: protectedProcedure
     .input(
       z.object({
         taskId: z.string(),
         name: z.string().nullish(),
         description: z.string().nullish(),
         isFinished: z.boolean().nullish(),
+        order: z.number().nullish(),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const { taskId, name, description, isFinished } = input;
+      const { taskId, name, description, isFinished, order } = input;
 
       const task = await ctx.prisma.task.findFirst({
         where: {
@@ -139,6 +145,10 @@ export const taskRouter = router({
 
       if (typeof isFinished === "boolean") {
         updateObject.isFinished = isFinished;
+      }
+
+      if (typeof order === "number") {
+        updateObject.order = order;
       }
 
       const updatedTask = await ctx.prisma.task.update({

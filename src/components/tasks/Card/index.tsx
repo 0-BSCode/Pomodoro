@@ -16,7 +16,7 @@ const TaskCard = ({ task, isSelected, onClick }: Props) => {
   const [isTaskFinished, setIsTaskFinished] = useState<boolean>(
     task.isFinished
   );
-  const { editTask } = useTasks();
+  const { updateTask } = useTasks();
 
   return (
     <div
@@ -33,7 +33,7 @@ const TaskCard = ({ task, isSelected, onClick }: Props) => {
           checked={isTaskFinished}
           label={task.name}
           onChange={(value: boolean) => {
-            editTask.mutate(
+            updateTask.mutate(
               { taskId: task.id, isFinished: value },
               {
                 onSuccess: (data) => {

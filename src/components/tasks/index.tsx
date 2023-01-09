@@ -5,13 +5,15 @@ import Link from "next/link";
 import useTasks from "@_hooks/useTasks";
 import useLocalStorage from "@_hooks/useLocalStorage";
 import { useTimerContext } from "@context/timerContext";
+import { Reorder } from "framer-motion";
 
 const TasksList = () => {
-  const { tasks } = useTasks();
+  const { tasks, setTasks } = useTasks();
   const [selectedTaskId, setSelectedTaskId] = useState<string>("");
 
   const { getItem, setItem } = useLocalStorage();
   const { display } = useTimerContext();
+
   useEffect(() => {
     setSelectedTaskId(getItem("selectedTask") ?? "-1");
   }, [getItem]);
@@ -30,13 +32,30 @@ const TasksList = () => {
           <img src={icons.plusCircleIcon} alt={"Add Task"} />
         </button>
       </Link>
-      <div className="flex flex-col gap-5">
-        {display ? (
-          tasks
-            .filter((task) => task.id === selectedTaskId)
-            ?.map((task) => (
+      {display ? (
+        tasks
+          .filter((task) => task.id === selectedTaskId)
+          ?.map((task) => (
+            <TaskCard
+              key={task.id}
+              task={task}
+              isSelected={selectedTaskId === task.id}
+              onClick={(taskId) => {
+                setSelectedTaskId(taskId);
+                setItem("selectedTask", taskId);
+              }}
+            />
+          ))
+      ) : (
+        <Reorder.Group
+          axis={"y"}
+          values={tasks}
+          onReorder={setTasks}
+          className="flex flex-col gap-5"
+        >
+          {tasks.map((task) => (
+            <Reorder.Item key={task.id} value={task}>
               <TaskCard
-                key={task.id}
                 task={task}
                 isSelected={selectedTaskId === task.id}
                 onClick={(taskId) => {
@@ -44,23 +63,10 @@ const TasksList = () => {
                   setItem("selectedTask", taskId);
                 }}
               />
-            ))
-        ) : (
-          <>
-            {tasks.map((task) => (
-              <TaskCard
-                key={task.id}
-                task={task}
-                isSelected={selectedTaskId === task.id}
-                onClick={(taskId) => {
-                  setSelectedTaskId(taskId);
-                  setItem("selectedTask", taskId);
-                }}
-              />
-            ))}
-          </>
-        )}
-      </div>
+            </Reorder.Item>
+          ))}
+        </Reorder.Group>
+      )}
     </section>
   );
 };

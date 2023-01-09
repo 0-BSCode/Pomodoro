@@ -1,6 +1,6 @@
 import { trpc } from "@utils/trpc";
 import { type Task } from "@prisma/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const useTasks = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -19,9 +19,20 @@ const useTasks = () => {
 
   const deleteTask = trpc.task.deleteTask.useMutation();
 
-  const editTask = trpc.task.editTask.useMutation();
+  const updateTask = trpc.task.updateTask.useMutation();
 
-  return { tasks, fetchTasks, createTask, editTask, deleteTask };
+  useEffect(() => {
+    if (!tasks) return;
+    tasks.forEach((task, idx) => {
+      if (task.order === idx + 1) return;
+      updateTask.mutate({
+        taskId: task.id,
+        order: idx + 1,
+      });
+    });
+  }, [tasks]);
+
+  return { tasks, setTasks, fetchTasks, createTask, updateTask, deleteTask };
 };
 
 export default useTasks;

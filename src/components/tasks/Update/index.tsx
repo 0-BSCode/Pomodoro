@@ -11,7 +11,7 @@ const TaskUpdate = () => {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-  const { editTask, deleteTask } = useTasks();
+  const { updateTask, deleteTask } = useTasks();
   const fetchTask = trpc.task.fetchTask.useQuery(
     { id: taskId },
     {
@@ -51,7 +51,7 @@ const TaskUpdate = () => {
           onSubmit={(e) => {
             e.preventDefault();
 
-            editTask.mutate(
+            updateTask.mutate(
               { taskId, name, description },
               {
                 onSuccess: () => {
