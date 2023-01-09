@@ -23,6 +23,7 @@ const useTasks = () => {
 
   useEffect(() => {
     if (!tasks) return;
+    // TODO: Optimize
     tasks.forEach((task, idx) => {
       if (task.order === idx + 1) return;
       updateTask.mutate({
