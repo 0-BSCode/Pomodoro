@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const useTimerInterval = () => {
   const [timerInterval, setTimerInterval] = useState<string | undefined>(
@@ -9,7 +9,7 @@ const useTimerInterval = () => {
     return timerInterval;
   };
 
-  const setInterval = (value: string): void => {
+  const setInterval = (value: string | undefined): void => {
     setTimerInterval(value);
   };
 

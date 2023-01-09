@@ -5,6 +5,7 @@ import Header from "@components/_common/header";
 import { trpc } from "../utils/trpc";
 
 import "../styles/globals.css";
+import TimerProvider from "@context/timerContext";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -12,10 +13,12 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <>
-        <Header />
-        <Component {...pageProps} />
-      </>
+      <TimerProvider>
+        <>
+          <Header />
+          <Component {...pageProps} />
+        </>
+      </TimerProvider>
     </SessionProvider>
   );
 };

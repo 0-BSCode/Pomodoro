@@ -10,6 +10,7 @@ import { type Timers } from "types/timers";
 import { TimerKeys } from "types/enums/timerKeys";
 import { AlarmSounds } from "types/enums/alarmSounds";
 import useLocalStorage from "@_hooks/useLocalStorage";
+import { useTimerContext } from "@context/timerContext";
 
 const Timer = () => {
   const [times, setTimes] = useState<Timers | undefined>(undefined);
@@ -19,6 +20,7 @@ const Timer = () => {
   const [openSettings, setOpenSettings] = useState<boolean>(false);
 
   const { getItem, setItem } = useLocalStorage();
+  const { setDisplay: setInterval } = useTimerContext();
   const settingsQuery = trpc.settings.fetchSettings.useQuery();
 
   // Initializing timer
@@ -47,9 +49,9 @@ const Timer = () => {
   // Ending timer
   useEffect(() => {
     if (timer && convertStringToTime(display) === 0 && times) {
+      console.log("TIMER ENDED");
       clearInterval(timer);
       setTimer(null);
-      setDisplay(convertTimeToString(times[tab] * 60));
 
       // Play alarm sound
       const audioElem = document.getElementById(
@@ -57,6 +59,8 @@ const Timer = () => {
       ) as HTMLAudioElement;
       audioElem.volume = (settingsQuery.data?.volume ?? 50) / 100;
       audioElem.play();
+
+      console.log("ALARM PLAYED");
 
       let newTab = TimerKeys.POMODORO;
       // Switch tabs
@@ -73,13 +77,21 @@ const Timer = () => {
           }
 
           setItem<number>("sessionNumber", sessionNumber);
-          return;
+          break;
         }
       }
 
       setTab(newTab);
+      setDisplay(convertTimeToString(times[newTab] * 60));
+
       // TODO: Pass enum as param
       setItem<string>("currentTab", newTab);
+      setInterval(undefined);
+    }
+
+    if (timer && convertStringToTime(display) !== 0) {
+      console.log("SETTING INTERVAL TO DISPLAY");
+      setInterval(display);
     }
   }, [timer, display]);
 
@@ -173,6 +185,8 @@ const Timer = () => {
                 )
               ) {
                 setDisplay(convertTimeToString(0));
+                // clearInterval(timer);
+                // setTimer(null);
               }
             }}
           >
