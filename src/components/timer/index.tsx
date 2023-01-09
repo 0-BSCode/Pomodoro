@@ -49,7 +49,6 @@ const Timer = () => {
   // Ending timer
   useEffect(() => {
     if (timer && convertStringToTime(display) === 0 && times) {
-      console.log("TIMER ENDED");
       clearInterval(timer);
       setTimer(null);
 
@@ -59,8 +58,6 @@ const Timer = () => {
       ) as HTMLAudioElement;
       audioElem.volume = (settingsQuery.data?.volume ?? 50) / 100;
       audioElem.play();
-
-      console.log("ALARM PLAYED");
 
       let newTab = TimerKeys.POMODORO;
       // Switch tabs
@@ -90,7 +87,6 @@ const Timer = () => {
     }
 
     if (timer && convertStringToTime(display) !== 0) {
-      console.log("SETTING INTERVAL TO DISPLAY");
       setInterval(display);
     }
   }, [timer, display]);

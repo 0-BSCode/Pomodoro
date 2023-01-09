@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import icons from "@assets/images/icons";
 import TaskCard from "./Card";
 import Link from "next/link";
 import useTasks from "@_hooks/useTasks";
+import useLocalStorage from "@_hooks/useLocalStorage";
+import { useTimerContext } from "@context/timerContext";
 
 const TasksList = () => {
   const { tasks } = useTasks();
+  const [selectedTaskId, setSelectedTaskId] = useState<string>("");
+
+  const { getItem, setItem } = useLocalStorage();
+  const { display } = useTimerContext();
+  useEffect(() => {
+    setSelectedTaskId(getItem("selectedTask") ?? "-1");
+  }, [getItem]);
 
   return (
     <section className="flex flex-col gap-4 px-3">
@@ -22,9 +31,35 @@ const TasksList = () => {
         </button>
       </Link>
       <div className="flex flex-col gap-5">
-        {tasks.map((task) => (
-          <TaskCard key={task.id} task={task} />
-        ))}
+        {display ? (
+          tasks
+            .filter((task) => task.id === selectedTaskId)
+            ?.map((task) => (
+              <TaskCard
+                key={task.id}
+                task={task}
+                isSelected={selectedTaskId === task.id}
+                onClick={(taskId) => {
+                  setSelectedTaskId(taskId);
+                  setItem("selectedTask", taskId);
+                }}
+              />
+            ))
+        ) : (
+          <>
+            {tasks.map((task) => (
+              <TaskCard
+                key={task.id}
+                task={task}
+                isSelected={selectedTaskId === task.id}
+                onClick={(taskId) => {
+                  setSelectedTaskId(taskId);
+                  setItem("selectedTask", taskId);
+                }}
+              />
+            ))}
+          </>
+        )}
       </div>
     </section>
   );

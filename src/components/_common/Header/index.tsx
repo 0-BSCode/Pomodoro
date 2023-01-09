@@ -1,10 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Head from "next/head";
 import { useTimerContext } from "@context/timerContext";
 
 const Header = () => {
   const { display } = useTimerContext();
-  console.log(`FROM HEADER: ${display}`);
   return (
     <Head>
       <title>{display ?? "Pomodoro"}</title>
