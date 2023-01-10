@@ -19,11 +19,23 @@ const useTasks = () => {
 
   const deleteTask = trpc.task.deleteTask.useMutation();
 
+  const deleteAllTasks = trpc.task.deleteAllTasks.useMutation({
+    onSuccess: () => {
+      fetchTasks.refetch();
+    },
+  });
+
+  const deleteCompletedTasks = trpc.task.deleteCompletedTasks.useMutation({
+    onSuccess: () => {
+      fetchTasks.refetch();
+    },
+  });
+
   const updateTask = trpc.task.updateTask.useMutation();
 
   useEffect(() => {
     if (!tasks) return;
-    // TODO: Optimize
+    // TODO: Optimize so it doesn't continuously update on drag
     tasks.forEach((task, idx) => {
       if (task.order === idx + 1) return;
       updateTask.mutate({
@@ -33,7 +45,16 @@ const useTasks = () => {
     });
   }, [tasks]);
 
-  return { tasks, setTasks, fetchTasks, createTask, updateTask, deleteTask };
+  return {
+    tasks,
+    setTasks,
+    fetchTasks,
+    createTask,
+    updateTask,
+    deleteTask,
+    deleteAllTasks,
+    deleteCompletedTasks,
+  };
 };
 
 export default useTasks;

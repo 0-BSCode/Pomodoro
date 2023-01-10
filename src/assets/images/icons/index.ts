@@ -7,6 +7,8 @@ import pomodoroIcon from "public/images/bowling-ball.svg";
 import personIcon from "public/images/user-circle.svg";
 import penIcon from "public/images/pen.svg";
 import timesIcon from "public/images/times.svg";
+import checkCircleIcon from "public/images/check-circle.svg";
+import trashIcon from "public/images/trash-alt.svg";
 
 const icons = {
   settingsIcon: settingsIcon.src,
@@ -18,6 +20,8 @@ const icons = {
   personIcon: personIcon.src,
   penIcon: penIcon.src,
   timesIcon: timesIcon.src,
+  checkCircleIcon: checkCircleIcon.src,
+  trashIcon: trashIcon.src,
 };
 
 export default icons;

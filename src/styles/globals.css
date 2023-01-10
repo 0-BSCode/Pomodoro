@@ -38,6 +38,10 @@
     .breaker {
         @apply w-full bg-cGray-500 h-1 rounded-lg
     }
+
+    .tooltip {
+        @apply absolute mt-2 right-0 bg-cGray-100 border-2 border-cGray-500 py-2 rounded-md
+    }
 }
 
 @layer utilities {

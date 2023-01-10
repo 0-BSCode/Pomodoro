@@ -4,7 +4,7 @@ A task tracker app created with the T3 Stack.
 
 ## To-do's
 
-1. Extra actions for tasks (delete all, clear those completed, reorder tasks, RTE for task description)
+1. Extra actions for tasks (delete all, clear those completed, RTE for task description)
 2. LOFI music player
 3. Quote generator (show only during timer start)
 4. Clean up timer logic

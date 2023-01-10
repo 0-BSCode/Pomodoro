@@ -107,6 +107,28 @@ export const taskRouter = router({
 
       return taskId;
     }),
+  deleteAllTasks: protectedProcedure.mutation(async ({ ctx }) => {
+    await ctx.prisma.task.deleteMany({
+      where: {
+        account: {
+          userId: ctx.session.user.id,
+        },
+      },
+    });
+    return;
+  }),
+  deleteCompletedTasks: protectedProcedure.mutation(async ({ ctx }) => {
+    await ctx.prisma.task.deleteMany({
+      where: {
+        isFinished: true,
+        account: {
+          userId: ctx.session.user.id,
+        },
+      },
+    });
+
+    return;
+  }),
   updateTask: protectedProcedure
     .input(
       z.object({
