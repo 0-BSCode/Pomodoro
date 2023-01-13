@@ -1,5 +1,4 @@
 import React from "react";
-import { signOut, useSession } from "next-auth/react";
 import authenticated from "@layouts/authenticated";
 import Timer from "@components/timer";
 import TasksList from "@components/tasks";
