@@ -2,8 +2,29 @@ import { trpc } from "@utils/trpc";
 import { type Task } from "@prisma/client";
 import { useEffect, useState } from "react";
 
+interface DebounceValueProps {
+  value: Task[];
+}
+
+const useDebounceValue = ({ value }: DebounceValueProps) => {
+  const [debounceValue, setDebounceValue] = useState<Task[]>(value);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDebounceValue(value);
+    }, 2000);
+
+    () => {
+      clearTimeout(timeout);
+    };
+  }, [value]);
+
+  return { debounceValue };
+};
+
 const useTasks = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const { debounceValue } = useDebounceValue({ value: tasks });
 
   const fetchTasks = trpc.task.fetchTasks.useQuery(undefined, {
     onSuccess: (data) => {
@@ -34,16 +55,16 @@ const useTasks = () => {
   const updateTask = trpc.task.updateTask.useMutation();
 
   useEffect(() => {
-    if (!tasks) return;
+    if (!debounceValue) return;
     // TODO: Optimize so it doesn't continuously update on drag
-    tasks.forEach((task, idx) => {
+    debounceValue.forEach((task, idx) => {
       if (task.order === idx + 1) return;
       updateTask.mutate({
         taskId: task.id,
         order: idx + 1,
       });
     });
-  }, [tasks]);
+  }, [debounceValue]);
 
   return {
     tasks,
