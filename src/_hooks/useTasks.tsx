@@ -56,7 +56,6 @@ const useTasks = () => {
 
   useEffect(() => {
     if (!debounceValue) return;
-    // TODO: Optimize so it doesn't continuously update on drag
     debounceValue.forEach((task, idx) => {
       if (task.order === idx + 1) return;
       updateTask.mutate({
