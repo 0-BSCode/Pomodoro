@@ -88,25 +88,33 @@ const TasksList = () => {
             />
           ))
       ) : (
-        <Reorder.Group
-          axis={"y"}
-          values={tasks}
-          onReorder={setTasks}
-          className="flex flex-col gap-5"
-        >
-          {tasks.map((task) => (
-            <Reorder.Item key={task.id} value={task}>
-              <TaskCard
-                task={task}
-                isSelected={selectedTaskId === task.id}
-                onClick={(taskId) => {
-                  setSelectedTaskId(taskId);
-                  setItem("selectedTask", taskId);
-                }}
-              />
-            </Reorder.Item>
-          ))}
-        </Reorder.Group>
+        <>
+          {tasks.length ? (
+            <Reorder.Group
+              axis={"y"}
+              values={tasks}
+              onReorder={setTasks}
+              className="flex flex-col gap-5"
+            >
+              {tasks.map((task) => (
+                <Reorder.Item key={task.id} value={task}>
+                  <TaskCard
+                    task={task}
+                    isSelected={selectedTaskId === task.id}
+                    onClick={(taskId) => {
+                      setSelectedTaskId(taskId);
+                      setItem("selectedTask", taskId);
+                    }}
+                  />
+                </Reorder.Item>
+              ))}
+            </Reorder.Group>
+          ) : (
+            <p className="text-center italic text-cGray-400">
+              You currently have no tasks
+            </p>
+          )}
+        </>
       )}
     </section>
   );
