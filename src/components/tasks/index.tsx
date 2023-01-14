@@ -65,12 +65,14 @@ const TasksList = () => {
           )}
         </div>
       </div>
-      <Link href="/tasks/create" passHref>
-        <button className="btn--outlined flex w-full items-center justify-center gap-3 shadow-none">
-          <p className="text-lg">Add Task</p>
-          <img src={icons.plusCircleIcon} alt={"Add Task"} />
-        </button>
-      </Link>
+      {!display && (
+        <Link href="/tasks/create" passHref>
+          <button className="btn--outlined flex w-full items-center justify-center gap-3 shadow-none">
+            <p className="text-lg">Add Task</p>
+            <img src={icons.plusCircleIcon} alt={"Add Task"} />
+          </button>
+        </Link>
+      )}
       {display ? (
         tasks
           .filter((task) => task.id === selectedTaskId)
