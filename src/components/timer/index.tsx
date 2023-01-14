@@ -189,6 +189,7 @@ const Timer = () => {
             <img
               src={timer ? icons.skipIcon : icons.skipDisabledIcon}
               alt={"Skip"}
+              className="w-8"
             />
           </button>
           <button
@@ -198,7 +199,7 @@ const Timer = () => {
               setOpenSettings(true);
             }}
           >
-            <img src={icons.settingsIcon} alt={"Skip"} />
+            <img src={icons.settingsIcon} alt={"Skip"} className="w-8" />
           </button>
         </div>
       </section>

@@ -5,6 +5,11 @@
 @tailwind utilities;
 
 @layer base {
+
+    :root {
+        @apply text-[16px] md:text-[18px] lg:text-[19px] xl:text-[23px] 2xl:text-[24px] 3xl:text-[25px]
+    }
+
     html {
         font-family: 'Patrick Hand', cursive
     }
@@ -19,6 +24,10 @@
 
     input, textarea, select {
         @apply border-2 border-cGray-500 rounded-md p-2 w-full focus:outline-cGray-300
+    }
+
+    img {
+        @apply w-5
     }
 }
 

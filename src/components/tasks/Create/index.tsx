@@ -9,7 +9,7 @@ const TaskCreate = () => {
   const router = useRouter();
 
   return (
-    <section className="flex flex-col items-center gap-10 px-5 pt-10">
+    <section className="flex flex-col items-center gap-10 px-5 pt-10 md:m-auto md:max-w-md">
       <h2 className="px-10 text-center text-2xl">
         Give your task a name and short description
       </h2>

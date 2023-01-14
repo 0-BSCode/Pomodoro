@@ -2,13 +2,13 @@ import React from "react";
 import authenticated from "@layouts/authenticated";
 import Timer from "@components/timer";
 import TasksList from "@components/tasks";
-import Navbar from "@components/navbar";
+import DashboardNavbar from "@components/dashboardNav";
 
 const Dashboard = () => {
   return (
     <>
-      <Navbar />
-      <div className="flex flex-col gap-20 px-5 py-14">
+      <DashboardNavbar />
+      <div className="flex flex-col gap-12 px-5 py-14 md:m-auto md:max-w-md">
         <Timer />
         <TasksList />
       </div>
