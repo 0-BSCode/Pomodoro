@@ -1,3 +1,4 @@
+import { TimerStatus } from "types/enums/timerStatus";
 import convertTimeToString from "@_utils/convertTimeToString";
 import {
   createContext,
@@ -14,7 +15,8 @@ export type TimerContextType = {
   setTitleDisplay: Dispatch<SetStateAction<string | undefined>>;
   timer: NodeJS.Timer | null;
   startTimer: (duration: number) => void;
-  stopTimer: () => void;
+  stopTimer: (status: TimerStatus) => void;
+  status: TimerStatus;
 };
 
 const defaultState: TimerContextType = {
@@ -30,9 +32,10 @@ const defaultState: TimerContextType = {
   startTimer: (duration = -1) => {
     return;
   },
-  stopTimer: () => {
+  stopTimer: (status = TimerStatus.STOPPED) => {
     return;
   },
+  status: TimerStatus.STOPPED,
 };
 
 export const TimerContext = createContext<TimerContextType>(defaultState);
@@ -43,6 +46,7 @@ const TimerProvider = ({ children }: { children: JSX.Element }) => {
     undefined
   );
   const [timer, setTimer] = useState<NodeJS.Timer | null>(null);
+  const [status, setStatus] = useState<TimerStatus>(TimerStatus.STOPPED);
 
   const startTimer = (duration: number) => {
     let timer = duration;
@@ -63,9 +67,12 @@ const TimerProvider = ({ children }: { children: JSX.Element }) => {
     }, 1000);
 
     setTimer(timerInterval);
+    setStatus(TimerStatus.STARTED);
   };
 
-  const stopTimer = () => {
+  const stopTimer = (status: TimerStatus) => {
+    setStatus(status);
+
     if (!timer) return;
     clearInterval(timer);
     setTimer(null);
@@ -81,6 +88,7 @@ const TimerProvider = ({ children }: { children: JSX.Element }) => {
         timer,
         startTimer,
         stopTimer,
+        status,
       }}
     >
       {children}

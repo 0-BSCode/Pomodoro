@@ -6,6 +6,7 @@ import useTasks from "@_hooks/useTasks";
 import useLocalStorage from "@_hooks/useLocalStorage";
 import { useTimerContext } from "@context/timerContext";
 import { Reorder } from "framer-motion";
+import { TimerStatus } from "types/enums/timerStatus";
 
 const TasksList = () => {
   const [selectedTaskId, setSelectedTaskId] = useState<string>("");
@@ -13,7 +14,7 @@ const TasksList = () => {
 
   const { tasks, setTasks, deleteCompletedTasks, deleteAllTasks } = useTasks();
   const { getItem, setItem } = useLocalStorage();
-  const { display } = useTimerContext();
+  const { status } = useTimerContext();
 
   useEffect(() => {
     setSelectedTaskId(getItem("selectedTask") ?? "-1");
@@ -65,7 +66,7 @@ const TasksList = () => {
           )}
         </div>
       </div>
-      {!display && (
+      {status === TimerStatus.STOPPED && (
         <Link href="/tasks/create" passHref>
           <button className="btn--outlined flex w-full items-center justify-center gap-3 shadow-none">
             <p className="text-lg">Add Task</p>
@@ -73,7 +74,7 @@ const TasksList = () => {
           </button>
         </Link>
       )}
-      {display ? (
+      {status === TimerStatus.STARTED ? (
         tasks
           .filter((task) => task.id === selectedTaskId)
           ?.map((task) => (

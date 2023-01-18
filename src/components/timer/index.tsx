@@ -1,7 +1,6 @@
 import { trpc } from "@utils/trpc";
 import convertTimeToString from "@_utils/convertTimeToString";
 import convertStringToTime from "@_utils/convertStringToTime";
-import startTimer from "@_utils/startTimer";
 import React, { useEffect, useState } from "react";
 import parseTimerKey from "@_utils/parseTimerKey";
 import icons from "@assets/images/icons";
@@ -11,6 +10,7 @@ import { TimerKeys } from "types/enums/timerKeys";
 import { AlarmSounds } from "types/enums/alarmSounds";
 import useLocalStorage from "@_hooks/useLocalStorage";
 import { useTimerContext } from "@context/timerContext";
+import { TimerStatus } from "types/enums/timerStatus";
 
 const Timer = () => {
   const [times, setTimes] = useState<Timers | undefined>(undefined);
@@ -20,8 +20,15 @@ const Timer = () => {
   const [openSettings, setOpenSettings] = useState<boolean>(false);
 
   const { getItem, setItem } = useLocalStorage();
-  const { display, setDisplay, setTitleDisplay, timer, startTimer, stopTimer } =
-    useTimerContext();
+  const {
+    display,
+    setDisplay,
+    setTitleDisplay,
+    timer,
+    startTimer,
+    stopTimer,
+    status,
+  } = useTimerContext();
   const settingsQuery = trpc.settings.fetchSettings.useQuery();
 
   // Initializing timer
@@ -40,7 +47,8 @@ const Timer = () => {
 
   // Switching tabs
   useEffect(() => {
-    // if (timer || convertStringToTime(display) !== 0) return;
+    if (status !== TimerStatus.STOPPED) return;
+
     if (times) {
       setDisplay(convertTimeToString(times[tab] * 60));
     }
@@ -52,7 +60,7 @@ const Timer = () => {
   // Ending timer
   useEffect(() => {
     if (timer && convertStringToTime(display) === 0 && times) {
-      stopTimer();
+      stopTimer(TimerStatus.STOPPED);
 
       // Play alarm sound
       const audioElem = document.getElementById(
@@ -85,11 +93,12 @@ const Timer = () => {
 
       // TODO: Pass enum as param
       setItem<string>("currentTab", newTab);
-      setTitleDisplay(undefined);
     }
 
-    if (timer && convertStringToTime(display) !== 0) {
+    if (status !== TimerStatus.STOPPED) {
       setTitleDisplay(display);
+    } else {
+      setTitleDisplay(undefined);
     }
   }, [timer, display]);
 
@@ -129,10 +138,11 @@ const Timer = () => {
             <button
               key={key}
               onClick={() => {
-                if (timer) {
+                if (status !== TimerStatus.STOPPED) {
                   if (confirm("This will reset the timer. Continue?")) {
                     setDisplay(convertTimeToString(0));
                     setTab(TimerKeys[key as keyof typeof TimerKeys]);
+                    stopTimer(TimerStatus.STOPPED);
                   }
                 } else {
                   setTab(TimerKeys[key as keyof typeof TimerKeys]);
@@ -167,7 +177,7 @@ const Timer = () => {
               if (!timer) {
                 startTimer(convertStringToTime(display));
               } else {
-                stopTimer();
+                stopTimer(TimerStatus.PAUSED);
               }
             }}
           >
