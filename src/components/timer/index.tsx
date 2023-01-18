@@ -15,12 +15,13 @@ import { useTimerContext } from "@context/timerContext";
 const Timer = () => {
   const [times, setTimes] = useState<Timers | undefined>(undefined);
   const [tab, setTab] = useState<TimerKeys>(TimerKeys.POMODORO);
-  const [display, setDisplay] = useState<string>(convertTimeToString(0));
-  const [timer, setTimer] = useState<NodeJS.Timer | null>(null);
+  // const [display, setDisplay] = useState<string>(convertTimeToString(0));
+  // const [timer, setTimer] = useState<NodeJS.Timer | null>(null);
   const [openSettings, setOpenSettings] = useState<boolean>(false);
 
   const { getItem, setItem } = useLocalStorage();
-  const { setDisplay: setInterval } = useTimerContext();
+  const { display, setDisplay, setTitleDisplay, timer, startTimer, stopTimer } =
+    useTimerContext();
   const settingsQuery = trpc.settings.fetchSettings.useQuery();
 
   // Initializing timer
@@ -29,28 +30,29 @@ const Timer = () => {
       const { pomodoroLength, shortBreakLength, longBreakLength } =
         settingsQuery.data;
       setTimes({ pomodoroLength, shortBreakLength, longBreakLength });
-      setDisplay(convertTimeToString(pomodoroLength * 60));
     }
 
     const currentTab =
       (getItem("currentTab") as TimerKeys) ?? TimerKeys.POMODORO;
+
     setTab(currentTab);
   }, [settingsQuery.data]);
 
   // Switching tabs
   useEffect(() => {
+    // if (timer || convertStringToTime(display) !== 0) return;
     if (times) {
       setDisplay(convertTimeToString(times[tab] * 60));
     }
+
     // TODO: Pass enum as param
     setItem<string>("currentTab", tab);
-  }, [tab]);
+  }, [tab, times]);
 
   // Ending timer
   useEffect(() => {
     if (timer && convertStringToTime(display) === 0 && times) {
-      clearInterval(timer);
-      setTimer(null);
+      stopTimer();
 
       // Play alarm sound
       const audioElem = document.getElementById(
@@ -83,11 +85,11 @@ const Timer = () => {
 
       // TODO: Pass enum as param
       setItem<string>("currentTab", newTab);
-      setInterval(undefined);
+      setTitleDisplay(undefined);
     }
 
     if (timer && convertStringToTime(display) !== 0) {
-      setInterval(display);
+      setTitleDisplay(display);
     }
   }, [timer, display]);
 
@@ -127,7 +129,14 @@ const Timer = () => {
             <button
               key={key}
               onClick={() => {
-                setTab(TimerKeys[key as keyof typeof TimerKeys]);
+                if (timer) {
+                  if (confirm("This will reset the timer. Continue?")) {
+                    setDisplay(convertTimeToString(0));
+                    setTab(TimerKeys[key as keyof typeof TimerKeys]);
+                  }
+                } else {
+                  setTab(TimerKeys[key as keyof typeof TimerKeys]);
+                }
               }}
               className={
                 "chip " +
@@ -156,14 +165,9 @@ const Timer = () => {
               audioElem.volume = 1;
               audioElem.play();
               if (!timer) {
-                const interval = startTimer(
-                  convertStringToTime(display),
-                  setDisplay
-                );
-                setTimer(interval);
+                startTimer(convertStringToTime(display));
               } else {
-                clearInterval(timer);
-                setTimer(null);
+                stopTimer();
               }
             }}
           >
@@ -181,8 +185,6 @@ const Timer = () => {
                 )
               ) {
                 setDisplay(convertTimeToString(0));
-                // clearInterval(timer);
-                // setTimer(null);
               }
             }}
           >
